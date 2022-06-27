@@ -116,7 +116,7 @@ export class AddContact extends React.PureComponent<
   renderUploadedPicture() {
     if(this.state.file) {
       return (
-        <Image class='ui image' size='small' src={URL.createObjectURL(this.state.file)}/>
+        <Image size='small' src={URL.createObjectURL(this.state.file)}/>
       )
     }
 
