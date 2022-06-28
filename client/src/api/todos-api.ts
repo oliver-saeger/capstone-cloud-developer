@@ -86,3 +86,45 @@ export async function createContact(
   })
   return response.data.item
 }
+
+export async function deleteContact(idToken: string, contactId: string): Promise<void> {
+  await Axios.delete(`${apiEndpoint}/contacts/${contactId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${idToken}`
+    }
+  })
+}
+
+export async function getContacts(idToken: string): Promise<Contact[]> {
+  console.log('Fetching contacts')
+
+  const response = await Axios.get(`${apiEndpoint}/contacts`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${idToken}`
+    },
+  })
+  console.log('Contacts:', response.data)
+  return response.data.items
+}
+
+export async function getMockContacts(idToken: string): Promise<Contact[]> {
+  console.log('Fetching contacts')
+
+  const contacts: Contact[] = []
+
+  for (let i = 0; i < 5; i++) {
+    const contact: Contact = {
+      contactId: i.toString(),
+      name:'Peter Parker',
+      phone:'01234 567890',
+      createdAt:'2022-06-28',
+      pictureUrl:'https://www.parisbeacon.com/wp-content/uploads/2022/03/Spider-Man-No-Way-Home-traje-final.jpg'
+    }
+
+    contacts.push(contact)
+  }
+
+  return contacts
+}

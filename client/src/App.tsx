@@ -8,6 +8,7 @@ import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
 import { Todos } from './components/Todos'
 import {AddContact} from "./components/AddContact";
+import {Contacts} from "./components/Contacts";
 
 export interface AppProps {}
 
@@ -93,6 +94,14 @@ export default class App extends Component<AppProps, AppState> {
           path="/contacts/add"
           exact
           component={AddContact} />
+
+        <Route
+          path="/contacts"
+          exact
+          render={props => {
+            return <Contacts {...props} auth={this.props.auth} />
+          }}
+        />
 
         <Route
           path="/"
