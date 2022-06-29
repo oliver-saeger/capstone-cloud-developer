@@ -1,36 +1,8 @@
 import { apiEndpoint } from '../config'
-import { Todo } from '../types/Todo';
-import { CreateTodoRequest } from '../types/CreateTodoRequest';
 import Axios from 'axios'
 import { UpdateTodoRequest } from '../types/UpdateTodoRequest';
 import {Contact} from "../types/Contact";
 import {CreateContactRequest} from "../types/CreateContactRequest";
-
-export async function getTodos(idToken: string): Promise<Todo[]> {
-  console.log('Fetching todos')
-
-  const response = await Axios.get(`${apiEndpoint}/todos`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
-  })
-  console.log('Todos:', response.data)
-  return response.data.items
-}
-
-export async function createTodo(
-  idToken: string,
-  newTodo: CreateTodoRequest
-): Promise<Todo> {
-  const response = await Axios.post(`${apiEndpoint}/todos`,  JSON.stringify(newTodo), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    }
-  })
-  return response.data.item
-}
 
 export async function patchTodo(
   idToken: string,
@@ -38,18 +10,6 @@ export async function patchTodo(
   updatedTodo: UpdateTodoRequest
 ): Promise<void> {
   await Axios.patch(`${apiEndpoint}/todos/${todoId}`, JSON.stringify(updatedTodo), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    }
-  })
-}
-
-export async function deleteTodo(
-  idToken: string,
-  todoId: string
-): Promise<void> {
-  await Axios.delete(`${apiEndpoint}/todos/${todoId}`, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -106,6 +66,19 @@ export async function getContacts(idToken: string): Promise<Contact[]> {
     },
   })
   console.log('Contacts:', response.data)
+  return response.data.items
+}
+
+export async function getContactById(idToken: string, contactId: string): Promise<Contact> {
+  console.log('Fetching contact with id:' + contactId)
+
+  const response = await Axios.get(`${apiEndpoint}/contacts/${contactId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${idToken}`
+    },
+  })
+  console.log('Contact:', response.data)
   return response.data.items
 }
 

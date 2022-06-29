@@ -14,7 +14,6 @@ import {
 import {deleteContact, getContacts, getMockContacts} from '../api/todos-api'
 import Auth from '../auth/Auth'
 import {Contact} from "../types/Contact";
-import {ReactElement} from "react";
 
 interface ContactsProps {
   auth: Auth
@@ -32,8 +31,8 @@ export class Contacts extends React.PureComponent<ContactsProps, ContactsState> 
     loadingContacts: true
   }
 
-  onEditButtonClick = (todoId: string) => {
-    this.props.history.push(`/contacts/${todoId}/edit`)
+  onEditButtonClick = (contactId: string) => {
+    this.props.history.push(`/contacts/${contactId}/edit`)
   }
 
   onContactDelete = async (contactId: string) => {
@@ -45,6 +44,10 @@ export class Contacts extends React.PureComponent<ContactsProps, ContactsState> 
     } catch {
       alert('Contact deletion failed')
     }
+  }
+
+  onAddContactButtonClick = () => {
+    this.props.history.push(`/contacts/add`)
   }
 
   async componentDidMount() {
@@ -139,10 +142,6 @@ export class Contacts extends React.PureComponent<ContactsProps, ContactsState> 
     return(
       <Button onClick={() => this.onAddContactButtonClick()}>Add</Button>
     )
-  }
-
-  onAddContactButtonClick(): void {
-    this.props.history.push(`/contacts/add`)
   }
 
   calculateDueDate(): string {

@@ -1,9 +1,11 @@
 import * as React from 'react'
-import {Form, Button, Input, Image, InputOnChangeData, FormGroup} from 'semantic-ui-react'
+import {Form, Button, Image, InputOnChangeData} from 'semantic-ui-react'
 import Auth from '../auth/Auth'
-import { getUploadUrl, uploadFile, createContact } from '../api/todos-api'
+import { getUploadUrl, uploadFile, createContact, getContactById } from '../api/todos-api'
 import {CreateContactRequest} from "../types/CreateContactRequest";
 import {ChangeEvent} from "react";
+import {Contact} from "../types/Contact";
+import Axios from "axios";
 
 enum UploadState {
   NoUpload,
@@ -41,7 +43,7 @@ export class AddContact extends React.PureComponent<
   private fileInputReference = React.createRef<any>()
 
 
-  handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  private handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
     if (!files) return
 
@@ -49,7 +51,7 @@ export class AddContact extends React.PureComponent<
       file: files[0]
     })
   }
-  handleSubmit = async (event: React.SyntheticEvent) => {
+  private handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
 
     try {
@@ -73,7 +75,7 @@ export class AddContact extends React.PureComponent<
     }
   }
 
-  uploadPicture = async () => {
+  private uploadPicture = async () => {
     this.setUploadState(UploadState.FetchingPresignedUrl)
     const uploadUrl = await getUploadUrl(this.props.auth.getIdToken(), this.props.match.params.contactId)
 
@@ -81,7 +83,7 @@ export class AddContact extends React.PureComponent<
     await uploadFile(uploadUrl, this.state.file)
   }
 
-  storeContactData = async () => {
+  private storeContactData = async () => {
     if(!this.state.name) {
       return
     }
@@ -94,25 +96,29 @@ export class AddContact extends React.PureComponent<
     await createContact(this.props.auth.getIdToken(), newContact)
   }
 
-  setUploadState(uploadState: UploadState) {
+  private setUploadState(uploadState: UploadState) {
     this.setState({
       uploadState
     })
   }
 
-  setNameState = (event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => {
+  private setNameState = (event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => {
     this.setState({
       name: value
     })
   }
 
-  setPhoneState = (event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => {
+  private setPhoneState = (event: ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => {
     this.setState({
       phone: value
     })
   }
 
   render() {
+    if(this.props.match.params.contactId) {
+      return this.renderEditPage(this.props.match.params.contactId)
+    }
+
     return (
       <div>
         <h1>Add new contact</h1>
@@ -156,7 +162,67 @@ export class AddContact extends React.PureComponent<
     )
   }
 
-  renderUploadedPicture() {
+  private async renderEditPage(contactId: string) {
+    const {name, phone, pictureUrl} = await this.loadContact(contactId)
+    this.setState({
+      name: name,
+      phone: phone
+    })
+
+    let pictureFile = undefined
+    if(pictureUrl) {
+      pictureFile = Axios.get(pictureUrl, {responseType:'blob'})
+    }
+    this.setState({
+      file: pictureFile
+    })
+
+    return (
+      <div>
+        <h1>Edit contact</h1>
+        <Form unstackable onSubmit={this.handleSubmit}>
+          <Form.Group unstackable widths={2}>
+            <Form.Input
+              id='form-input-name'
+              label='Name'
+              placeholder="Contact's name"
+              onChange={this.setNameState}
+              value={this.state.name}
+            />
+            <Form.Input
+              id='form-input-phone'
+              label='Phone'
+              placeholder="Contact's phone number"
+              onChange={this.setPhoneState}
+              value={this.state.phone}
+            />
+          </Form.Group>
+          <Form.Field>
+            <label>Picture</label>
+            <input
+              ref={this.fileInputReference}
+              type="file"
+              accept="image/*"
+              placeholder="Image to upload"
+              onChange={this.handleFileChange}
+              hidden
+            />
+            <Button
+              type="button"
+              content='Choose picture'
+              icon='file'
+              onClick={() => this.fileInputReference.current.click()}
+            />
+            {this.renderUploadedPicture()}
+          </Form.Field>
+
+          {this.renderButton()}
+        </Form>
+      </div>
+    )
+  }
+
+  private renderUploadedPicture() {
     if(this.state.file) {
       return (
         <Image size='small' src={URL.createObjectURL(this.state.file)}/>
@@ -168,7 +234,7 @@ export class AddContact extends React.PureComponent<
     )
   }
 
-  renderButton() {
+  private renderButton() {
 
     return (
       <div>
@@ -182,5 +248,9 @@ export class AddContact extends React.PureComponent<
         </Button>
       </div>
     )
+  }
+
+  private async loadContact(contactId: string): Promise<Contact> {
+    return await getContactById(this.props.auth.getIdToken(), contactId);
   }
 }

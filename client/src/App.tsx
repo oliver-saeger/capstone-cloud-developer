@@ -6,7 +6,6 @@ import Auth from './auth/Auth'
 import { EditTodo } from './components/EditTodo'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
-import { Todos } from './components/Todos'
 import {AddContact} from "./components/AddContact";
 import {Contacts} from "./components/Contacts";
 
@@ -27,11 +26,11 @@ export default class App extends Component<AppProps, AppState> {
     this.handleLogout = this.handleLogout.bind(this)
   }
 
-  handleLogin() {
+  private handleLogin() {
     this.props.auth.login()
   }
 
-  handleLogout() {
+  private handleLogout() {
     this.props.auth.logout()
   }
 
@@ -55,7 +54,7 @@ export default class App extends Component<AppProps, AppState> {
     )
   }
 
-  generateMenu() {
+  private generateMenu() {
     return (
       <Menu>
         <Menu.Item name="home">
@@ -67,7 +66,7 @@ export default class App extends Component<AppProps, AppState> {
     )
   }
 
-  logInLogOutButton() {
+  private logInLogOutButton() {
     if (this.props.auth.isAuthenticated()) {
       return (
         <Menu.Item name="logout" onClick={this.handleLogout}>
@@ -83,7 +82,7 @@ export default class App extends Component<AppProps, AppState> {
     }
   }
 
-  generateCurrentPage() {
+  private generateCurrentPage() {
     // if (!this.props.auth.isAuthenticated()) {
     //   return <LogIn auth={this.props.auth} />
     // }
@@ -93,10 +92,11 @@ export default class App extends Component<AppProps, AppState> {
         <Route
           path="/contacts/add"
           exact
-          component={AddContact} />
+          component={AddContact}
+        />
 
         <Route
-          path="/contacts"
+          path="/"
           exact
           render={props => {
             return <Contacts {...props} auth={this.props.auth} />
@@ -104,10 +104,10 @@ export default class App extends Component<AppProps, AppState> {
         />
 
         <Route
-          path="/"
+          path="/contacts/:contactId/edit"
           exact
           render={props => {
-            return <Todos {...props} auth={this.props.auth} />
+            return <AddContact {...props} auth={this.props.auth} />
           }}
         />
 
