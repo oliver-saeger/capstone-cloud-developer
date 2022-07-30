@@ -11,7 +11,7 @@ import {
   Loader
 } from 'semantic-ui-react'
 
-import {deleteContact, getContacts, getMockContacts} from '../api/todos-api'
+import {deleteContact, getMockContacts} from '../api/todos-api'
 import Auth from '../auth/Auth'
 import {Contact} from "../types/Contact";
 
@@ -52,7 +52,7 @@ export class Contacts extends React.PureComponent<ContactsProps, ContactsState> 
 
   async componentDidMount() {
     try {
-      const contacts = await getMockContacts(this.props.auth.getIdToken())
+      const contacts = await getMockContacts()
       this.setState({
         contacts,
         loadingContacts: false
@@ -93,7 +93,7 @@ export class Contacts extends React.PureComponent<ContactsProps, ContactsState> 
   renderContactsList() {
     return (
       <Grid padded>
-        {this.state.contacts.map((contact, pos) => {
+        {this.state.contacts.map((contact) => {
           return (
             <Grid.Row key={contact.contactId}>
               <Grid.Column width={1} verticalAlign="middle">

@@ -1,11 +1,10 @@
 import * as React from 'react'
 import {Form, Button, Image, InputOnChangeData} from 'semantic-ui-react'
 import Auth from '../auth/Auth'
-import { getUploadUrl, uploadFile, createContact, getContactById } from '../api/todos-api'
+import {getUploadUrl, uploadFile, createContact, getMockContactById} from '../api/todos-api'
 import {CreateContactRequest} from "../types/CreateContactRequest";
 import {ChangeEvent} from "react";
 import {Contact} from "../types/Contact";
-import Axios from "axios";
 
 enum UploadState {
   NoUpload,
@@ -27,6 +26,7 @@ interface AddContactState {
   phone: string
   file: any
   uploadState: UploadState
+  pictureUrl: string
 }
 
 export class AddContact extends React.PureComponent<
@@ -37,7 +37,8 @@ export class AddContact extends React.PureComponent<
     name: '',
     phone: '',
     file: undefined,
-    uploadState: UploadState.NoUpload
+    uploadState: UploadState.NoUpload,
+    pictureUrl: ''
   }
 
   private fileInputReference = React.createRef<any>()
@@ -116,9 +117,13 @@ export class AddContact extends React.PureComponent<
 
   render() {
     if(this.props.match.params.contactId) {
-      return this.renderEditPage(this.props.match.params.contactId)
+      return this.renderEditPage()
     }
 
+    return this.renderCreatePage()
+  }
+
+  private renderCreatePage() {
     return (
       <div>
         <h1>Add new contact</h1>
@@ -137,45 +142,50 @@ export class AddContact extends React.PureComponent<
               onChange={this.setPhoneState}
             />
           </Form.Group>
-            <Form.Field>
-              <label>Picture</label>
-              <input
-                ref={this.fileInputReference}
-                type="file"
-                accept="image/*"
-                placeholder="Image to upload"
-                onChange={this.handleFileChange}
-                hidden
-              />
-              <Button
-                type="button"
-                content='Choose picture'
-                icon='file'
-                onClick={() => this.fileInputReference.current.click()}
-              />
-              {this.renderUploadedPicture()}
-            </Form.Field>
+          <Form.Field>
+            <label>Picture</label>
+            <input
+              ref={this.fileInputReference}
+              type="file"
+              accept="image/*"
+              placeholder="Image to upload"
+              onChange={this.handleFileChange}
+              hidden
+            />
+            <Button
+              type="button"
+              content='Choose picture'
+              icon='file'
+              onClick={() => this.fileInputReference.current.click()}
+            />
+            {this.renderUploadedPicture()}
+          </Form.Field>
 
-            {this.renderButton()}
+          {this.renderButton()}
         </Form>
       </div>
     )
   }
 
-  private async renderEditPage(contactId: string) {
-    const {name, phone, pictureUrl} = await this.loadContact(contactId)
+  private async setEditPageState(contactId: string) {
+    const {name, phone, pictureUrl} = await AddContact.loadContact((contactId))
     this.setState({
       name: name,
       phone: phone
     })
 
-    let pictureFile = undefined
     if(pictureUrl) {
-      pictureFile = Axios.get(pictureUrl, {responseType:'blob'})
+      this.setState({
+        pictureUrl: pictureUrl
+      })
     }
-    this.setState({
-      file: pictureFile
-    })
+  }
+
+  componentDidMount() {
+    this.setEditPageState(this.props.match.params.contactId)
+  }
+
+  private renderEditPage() {
 
     return (
       <div>
@@ -227,6 +237,10 @@ export class AddContact extends React.PureComponent<
       return (
         <Image size='small' src={URL.createObjectURL(this.state.file)}/>
       )
+    } else if (this.state.pictureUrl) {
+      return (
+        <Image size='small' src={this.state.pictureUrl}/>
+      )
     }
 
     return (
@@ -250,7 +264,7 @@ export class AddContact extends React.PureComponent<
     )
   }
 
-  private async loadContact(contactId: string): Promise<Contact> {
-    return await getContactById(this.props.auth.getIdToken(), contactId);
+  private static async loadContact(contactId: string): Promise<Contact> {
+    return await getMockContactById(contactId);
   }
 }

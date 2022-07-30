@@ -1,6 +1,6 @@
-import { apiEndpoint } from '../config'
+import {apiEndpoint} from '../config'
 import Axios from 'axios'
-import { UpdateTodoRequest } from '../types/UpdateTodoRequest';
+import {UpdateTodoRequest} from '../types/UpdateTodoRequest';
 import {Contact} from "../types/Contact";
 import {CreateContactRequest} from "../types/CreateContactRequest";
 
@@ -82,7 +82,17 @@ export async function getContactById(idToken: string, contactId: string): Promis
   return response.data.items
 }
 
-export async function getMockContacts(idToken: string): Promise<Contact[]> {
+export async function getMockContactById(contactId: string): Promise<Contact> {
+  return {
+    contactId: contactId,
+    name: 'Peter Parker',
+    phone: '01234 567890',
+    createdAt: '2022-06-28',
+    pictureUrl: 'https://www.parisbeacon.com/wp-content/uploads/2022/03/Spider-Man-No-Way-Home-traje-final.jpg'
+  };
+}
+
+export async function getMockContacts(): Promise<Contact[]> {
   console.log('Fetching contacts')
 
   const contacts: Contact[] = []
