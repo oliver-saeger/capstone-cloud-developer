@@ -3,7 +3,7 @@ import { Link, Route, Router, Switch } from 'react-router-dom'
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 
 import Auth from './auth/Auth'
-import { EditTodo } from './components/EditTodo'
+import { EditContact } from './components/EditContact'
 import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
 import {AddContact} from "./components/AddContact";
@@ -83,18 +83,12 @@ export default class App extends Component<AppProps, AppState> {
   }
 
   private generateCurrentPage() {
-    // if (!this.props.auth.isAuthenticated()) {
-    //   return <LogIn auth={this.props.auth} />
-    // }
+    if (!this.props.auth.isAuthenticated()) {
+      return <LogIn auth={this.props.auth} />
+    }
 
     return (
       <Switch>
-        <Route
-          path="/contacts/add"
-          exact
-          component={AddContact}
-        />
-
         <Route
           path="/"
           exact
@@ -104,7 +98,7 @@ export default class App extends Component<AppProps, AppState> {
         />
 
         <Route
-          path="/contacts/:contactId/edit"
+          path="/contacts/add"
           exact
           render={props => {
             return <AddContact {...props} auth={this.props.auth} />
@@ -112,10 +106,10 @@ export default class App extends Component<AppProps, AppState> {
         />
 
         <Route
-          path="/todos/:todoId/edit"
+          path="/contacts/:contactId/edit"
           exact
           render={props => {
-            return <EditTodo {...props} auth={this.props.auth} />
+            return <EditContact {...props} auth={this.props.auth} />
           }}
         />
 

@@ -1,15 +1,15 @@
 import {apiEndpoint} from '../config'
 import Axios from 'axios'
-import {UpdateTodoRequest} from '../types/UpdateTodoRequest';
+import {UpdateContactRequest} from '../types/UpdateContactRequest';
 import {Contact} from "../types/Contact";
 import {CreateContactRequest} from "../types/CreateContactRequest";
 
-export async function patchTodo(
+export async function patchContact(
   idToken: string,
-  todoId: string,
-  updatedTodo: UpdateTodoRequest
+  contactId: string,
+  updatedContact: UpdateContactRequest
 ): Promise<void> {
-  await Axios.patch(`${apiEndpoint}/todos/${todoId}`, JSON.stringify(updatedTodo), {
+  await Axios.patch(`${apiEndpoint}/contacts/${contactId}`, JSON.stringify(updatedContact), {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -21,7 +21,7 @@ export async function getUploadUrl(
   idToken: string,
   contactId: string
 ): Promise<string> {
-  const response = await Axios.post(`${apiEndpoint}/contacts/${contactId}/picture`, '', {
+  const response = await Axios.post(`${apiEndpoint}/contacts/${contactId}/attachment`, '', {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
@@ -86,9 +86,9 @@ export async function getMockContactById(contactId: string): Promise<Contact> {
   return {
     contactId: contactId,
     name: 'Peter Parker',
-    phone: '01234 567890',
+    phoneNumber: '01234 567890',
     createdAt: '2022-06-28',
-    pictureUrl: 'https://www.parisbeacon.com/wp-content/uploads/2022/03/Spider-Man-No-Way-Home-traje-final.jpg'
+    attachmentUrl: 'https://www.parisbeacon.com/wp-content/uploads/2022/03/Spider-Man-No-Way-Home-traje-final.jpg'
   };
 }
 
@@ -101,9 +101,9 @@ export async function getMockContacts(): Promise<Contact[]> {
     const contact: Contact = {
       contactId: i.toString(),
       name:'Peter Parker',
-      phone:'01234 567890',
+      phoneNumber:'01234 567890',
       createdAt:'2022-06-28',
-      pictureUrl:'https://www.parisbeacon.com/wp-content/uploads/2022/03/Spider-Man-No-Way-Home-traje-final.jpg'
+      attachmentUrl:'https://www.parisbeacon.com/wp-content/uploads/2022/03/Spider-Man-No-Way-Home-traje-final.jpg'
     }
 
     contacts.push(contact)

@@ -11,7 +11,7 @@ import {
   Loader
 } from 'semantic-ui-react'
 
-import {deleteContact, getMockContacts} from '../api/todos-api'
+import {deleteContact, getContacts} from '../api/contacts-api'
 import Auth from '../auth/Auth'
 import {Contact} from "../types/Contact";
 
@@ -52,7 +52,7 @@ export class Contacts extends React.PureComponent<ContactsProps, ContactsState> 
 
   async componentDidMount() {
     try {
-      const contacts = await getMockContacts()
+      const contacts = await getContacts(this.props.auth.getIdToken())
       this.setState({
         contacts,
         loadingContacts: false
@@ -97,10 +97,10 @@ export class Contacts extends React.PureComponent<ContactsProps, ContactsState> 
           return (
             <Grid.Row key={contact.contactId}>
               <Grid.Column width={1} verticalAlign="middle">
-                {contact.pictureUrl && (
-                  <Image src={contact.pictureUrl} wrapped />
+                {contact.attachmentUrl && (
+                  <Image src={contact.attachmentUrl} wrapped />
                 )}
-                {!contact.pictureUrl && (
+                {!contact.attachmentUrl && (
                   <Icon name='address card outline'/>
                 )}
               </Grid.Column>
@@ -108,7 +108,7 @@ export class Contacts extends React.PureComponent<ContactsProps, ContactsState> 
                 {contact.name}
               </Grid.Column>
               <Grid.Column width={5} verticalAlign="middle" floated="right">
-                {contact.phone}
+                {contact.phoneNumber}
               </Grid.Column>
               <Grid.Column width={1} floated="right">
                 <Button
