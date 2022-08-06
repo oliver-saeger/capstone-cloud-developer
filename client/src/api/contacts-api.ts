@@ -79,7 +79,7 @@ export async function getContactById(idToken: string, contactId: string): Promis
     },
   })
   console.log('Contact: ', response.data)
-  return response.data.items
+  return response.data.item
 }
 
 export async function getMockContactById(contactId: string): Promise<Contact> {
