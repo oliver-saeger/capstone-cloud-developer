@@ -3,12 +3,12 @@ import {
   deleteTodoItem,
   getContactItemsPerUser,
   updateAttachmentUrl,
-  updateTodoItem
+  updateContactItem
 } from '../dataLayer/contactsAccess'
 import { getAttachmentBucketUrl, createAttachmentPresignedUrl } from '../helpers/attachmentUtils';
 import { ContactItem } from '../models/ContactItem'
 import { CreateContactRequest } from '../requests/CreateContactRequest'
-import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
+import { UpdateContactRequest } from '../requests/UpdateContactRequest'
 import { createLogger } from '../utils/logger'
 import * as uuid from 'uuid'
 
@@ -32,13 +32,13 @@ export async function createContact(userId: string, createTodoRequest: CreateCon
   return createContactItem(newContactItem);
 }
 
-export async function updateTodo(userId: string, todoId: string, updateTodoRequest: UpdateTodoRequest): Promise<ContactItem> {
-  logger.info('Update Todo Item: ', {userId: userId, todoId: todoId, updateTodoRequest: updateTodoRequest})
-  return updateTodoItem(userId, todoId, updateTodoRequest);
+export async function updateContact(userId: string, contactId: string, updateContactRequest: UpdateContactRequest): Promise<ContactItem> {
+  logger.info('Update contact item: ', {userId: userId, contactId: contactId, updateContactRequest: updateContactRequest})
+  return updateContactItem(userId, contactId, updateContactRequest);
 }
 
 export async function deleteTodo(userId: string, todoId: string): Promise<void> {
-  logger.info('Delete Todo Item: ', {userId: userId, todoId: todoId})
+  logger.info('Delete Todo Item: ', {userId: userId, contactId: todoId})
   return deleteTodoItem(userId, todoId)
 }
 

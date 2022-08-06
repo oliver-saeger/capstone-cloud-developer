@@ -1,7 +1,7 @@
 import * as AWS from 'aws-sdk'
 import { createLogger } from '../utils/logger'
 import { ContactItem } from '../models/ContactItem'
-import {TodoUpdate} from "../models/TodoUpdate";
+import {ContactUpdate} from "../models/ContactUpdate";
 import {DocumentClient} from "aws-sdk/lib/dynamodb/document_client";
 import UpdateItemInput = DocumentClient.UpdateItemInput;
 import QueryInput = DocumentClient.QueryInput;
@@ -44,21 +44,20 @@ export async function createContactItem(todoItem: ContactItem): Promise<ContactI
   return todoItem
 }
 
-export async function updateTodoItem(userId: string, todoId: string, todoUpdate: TodoUpdate): Promise<ContactItem> {
+export async function updateContactItem(userId: string, contactId: string, contactUpdate: ContactUpdate): Promise<ContactItem> {
   const params: UpdateItemInput = {
     TableName: contactsTable,
     Key: {
       userId: userId,
-      todoId: todoId
+      todoId: contactId
     },
     ExpressionAttributeNames: {
       "#N": "name"
     },
-    UpdateExpression: "set #N = :todoName, dueDate = :dueDate, done = :done",
+    UpdateExpression: "set #N = :contactName, phoneNumber = :phoneNumber",
     ExpressionAttributeValues: {
-      ":todoName": todoUpdate.name,
-      ":dueDate": todoUpdate.dueDate,
-      ":done": todoUpdate.done
+      ":todoName": contactUpdate.name,
+      ":phoneNumber": contactUpdate.phoneNumber
     },
     ReturnValues: "ALL_NEW"
   }

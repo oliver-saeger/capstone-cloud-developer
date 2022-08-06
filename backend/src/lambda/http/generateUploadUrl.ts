@@ -10,7 +10,7 @@ import { getUserId } from '../utils'
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    const todoId = event.pathParameters.todoId
+    const todoId = event.pathParameters.contactId
     const userId = getUserId(event)
     const attachmentId = uuid.v4();
 

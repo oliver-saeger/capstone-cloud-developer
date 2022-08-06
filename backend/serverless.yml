@@ -51,7 +51,7 @@ custom:
         schema: ${file(models/create-contact-model.json)}
       - name: UpdateContact
         contentType: application/json
-        schema: ${file(models/update-todo-model.json)}
+        schema: ${file(models/update-contact-model.json)}
 
 
 functions:
@@ -94,23 +94,23 @@ functions:
           - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
 
-  UpdateTodo:
+  UpdateContact:
     handler: src/lambda/http/updateTodo.handler
     events:
       - http:
           method: patch
-          path: todos/{todoId}
+          path: contacts/{contactId}
           cors: true
           authorizer: Auth
           request:
             schemas:
-              application/json: ${file(models/update-todo-model.json)}
+              application/json: ${file(models/update-contact-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:GetItem
           - dynamodb:UpdateItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
 
   DeleteTodo:
     handler: src/lambda/http/deleteTodo.handler
