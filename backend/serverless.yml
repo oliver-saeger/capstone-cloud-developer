@@ -1,6 +1,6 @@
 org: saegeroliver
-app: serverless-todo-app
-service: serverless-todo-app
+app: serverless-contacts-app
+service: serverless-contacts-app
 
 plugins:
   - serverless-webpack
@@ -75,7 +75,7 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.CONTACTS_CREATED_AT_INDEX}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}/index/${self:provider.environment.CONTACTS_CREATED_AT_INDEX}
 
   CreateContact:
     handler: src/lambda/http/createContact.handler
@@ -95,7 +95,7 @@ functions:
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
 
   UpdateContact:
-    handler: src/lambda/http/updateTodo.handler
+    handler: src/lambda/http/updateContact.handler
     events:
       - http:
           method: patch
@@ -113,7 +113,7 @@ functions:
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
 
   DeleteContact:
-    handler: src/lambda/http/deleteTodo.handler
+    handler: src/lambda/http/deleteContact.handler
     events:
       - http:
           method: delete
@@ -176,9 +176,9 @@ resources:
           - AttributeName: contactId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.TODOS_TABLE}
+        TableName: ${self:provider.environment.CONTACTS_TABLE}
         LocalSecondaryIndexes:
-          - IndexName: ${self:provider.environment.TODOS_CREATED_AT_INDEX}
+          - IndexName: ${self:provider.environment.CONTACTS_CREATED_AT_INDEX}
             KeySchema:
               - AttributeName: userId
                 KeyType: HASH
