@@ -1,10 +1,10 @@
 import * as React from 'react'
 import {Form, Button, Image, InputOnChangeData} from 'semantic-ui-react'
 import Auth from '../auth/Auth'
-import {getUploadUrl, uploadFile, createContact, getContactById} from '../api/contacts-api'
-import {CreateContactRequest} from "../types/CreateContactRequest";
+import {getUploadUrl, uploadFile, getContactById, patchContact} from '../api/contacts-api'
 import {ChangeEvent} from "react";
 import {Contact} from "../types/Contact";
+import {UpdateContactRequest} from "../types/UpdateContactRequest";
 
 enum UploadState {
   NoUpload,
@@ -61,14 +61,14 @@ export class EditContact extends React.PureComponent<
         return
       }
 
-      await this.storeContactData()
+      await this.updateContactData()
 
       if (this.state.file) {
         await this.uploadPicture()
         alert('File was uploaded!')
       }
 
-      alert('Contact was created!')
+      alert('Contact was updated!')
     } catch (e: any) {
       alert('Could not upload file: ' + e.message)
     } finally {
@@ -84,17 +84,17 @@ export class EditContact extends React.PureComponent<
     await uploadFile(uploadUrl, this.state.file)
   }
 
-  private storeContactData = async () => {
+  private updateContactData = async () => {
     if(!this.state.name) {
       return
     }
 
-    const newContact: CreateContactRequest = {
+    const newContact: UpdateContactRequest = {
       name: this.state.name,
       phoneNumber: this.state.phoneNumber
     }
 
-    await createContact(this.props.auth.getIdToken(), newContact)
+    await patchContact(this.props.auth.getIdToken(), this.props.match.params.contactId, newContact)
   }
 
   private setUploadState(uploadState: UploadState) {
