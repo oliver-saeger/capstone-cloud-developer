@@ -7,7 +7,7 @@ import { getUserId } from '../utils';
 import { createContact } from '../../businessLogic/contacts'
 import { createLogger } from "../../utils/logger";
 
-const logger = createLogger('todos')
+const logger = createLogger('contacts')
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {

@@ -11,7 +11,7 @@ import DeleteItemInput = DocumentClient.DeleteItemInput;
 const AWSXRay = require('aws-xray-sdk')
 const XAWS = AWSXRay.captureAWS(AWS)
 
-const logger = createLogger('TodosAccess')
+const logger = createLogger('contactsAccess')
 
 const dbClient: DocumentClient = new XAWS.DynamoDB.DocumentClient();
 const contactsTable = process.env.CONTACTS_TABLE
@@ -34,14 +34,14 @@ export async function getContactItemsPerUser(userId: string): Promise<ContactIte
   return contactItems
 }
 
-export async function createContactItem(todoItem: ContactItem): Promise<ContactItem> {
+export async function createContactItem(contactItem: ContactItem): Promise<ContactItem> {
   const params : PutItemInput = {
     TableName: contactsTable,
-    Item: todoItem
+    Item: contactItem
   }
 
   await dbClient.put(params).promise()
-  return todoItem
+  return contactItem
 }
 
 export async function updateContactItem(userId: string, contactId: string, contactUpdate: ContactUpdate): Promise<ContactItem> {
@@ -49,14 +49,14 @@ export async function updateContactItem(userId: string, contactId: string, conta
     TableName: contactsTable,
     Key: {
       userId: userId,
-      todoId: contactId
+      contactId: contactId
     },
     ExpressionAttributeNames: {
       "#N": "name"
     },
     UpdateExpression: "set #N = :contactName, phoneNumber = :phoneNumber",
     ExpressionAttributeValues: {
-      ":todoName": contactUpdate.name,
+      ":contactName": contactUpdate.name,
       ":phoneNumber": contactUpdate.phoneNumber
     },
     ReturnValues: "ALL_NEW"
