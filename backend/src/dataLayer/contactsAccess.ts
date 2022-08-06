@@ -78,12 +78,12 @@ export async function deleteContactItem(userId: string, contactId: string): Prom
   await dbClient.delete(params).promise()
 }
 
-export async function updateAttachmentUrl(userId: string, todoId: string, attachmentUrl: string): Promise<void> {
+export async function updateAttachmentUrl(userId: string, contactId: string, attachmentUrl: string): Promise<void> {
   await dbClient.update({
     TableName: contactsTable,
     Key: {
       userId,
-      todoId
+      contactId: contactId
     },
     UpdateExpression: 'set attachmentUrl = :attachmentUrl',
     ExpressionAttributeValues: {

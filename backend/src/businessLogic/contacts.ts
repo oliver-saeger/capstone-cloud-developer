@@ -49,8 +49,8 @@ export async function createUploadUrl(attachmentId: string): Promise<string> {
   return url;
 }
 
-export async function addAttachmentToTodo(userId: string, todoId: string, attachmentId: string): Promise<void> {
+export async function addAttachmentToContact(userId: string, contactId: string, attachmentId: string): Promise<void> {
   const attachmentUrl = getAttachmentBucketUrl(attachmentId);
   logger.info('Get attachment URL: ' + attachmentUrl)
-  await updateAttachmentUrl(userId, todoId, attachmentUrl)
+  await updateAttachmentUrl(userId, contactId, attachmentUrl)
 }
