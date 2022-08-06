@@ -1,6 +1,6 @@
 import {
   createContactItem,
-  deleteTodoItem,
+  deleteContactItem,
   getContactItemsPerUser,
   updateAttachmentUrl,
   updateContactItem
@@ -37,9 +37,9 @@ export async function updateContact(userId: string, contactId: string, updateCon
   return updateContactItem(userId, contactId, updateContactRequest);
 }
 
-export async function deleteTodo(userId: string, todoId: string): Promise<void> {
-  logger.info('Delete Todo Item: ', {userId: userId, contactId: todoId})
-  return deleteTodoItem(userId, todoId)
+export async function deleteContact(userId: string, contactId: string): Promise<void> {
+  logger.info('Delete contact item: ', {userId: userId, contactId: contactId})
+  return deleteContactItem(userId, contactId)
 }
 
 export async function createUploadUrl(attachmentId: string): Promise<string> {

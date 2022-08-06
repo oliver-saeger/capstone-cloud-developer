@@ -66,12 +66,12 @@ export async function updateContactItem(userId: string, contactId: string, conta
   return updatedItem.Attributes as ContactItem
 }
 
-export async function deleteTodoItem(userId: string, todoId: string): Promise<void> {
+export async function deleteContactItem(userId: string, contactId: string): Promise<void> {
   const params: DeleteItemInput = {
     TableName: contactsTable,
     Key: {
       userId: userId,
-      todoId: todoId
+      contactId: contactId
     }
   }
 
