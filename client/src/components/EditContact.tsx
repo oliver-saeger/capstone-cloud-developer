@@ -5,6 +5,7 @@ import {getUploadUrl, uploadFile, getContactById, patchContact} from '../api/con
 import {ChangeEvent} from "react";
 import {Contact} from "../types/Contact";
 import {UpdateContactRequest} from "../types/UpdateContactRequest";
+import {History} from "history";
 
 enum UploadState {
   NoUpload,
@@ -12,16 +13,17 @@ enum UploadState {
   UploadingFile,
 }
 
-interface AddContactProps {
+interface EditContactProps {
   match: {
     params: {
       contactId: string
     }
   }
   auth: Auth
+  history: History
 }
 
-interface AddContactState {
+interface EditContactState {
   name: string
   phoneNumber: string
   file: any
@@ -30,10 +32,10 @@ interface AddContactState {
 }
 
 export class EditContact extends React.PureComponent<
-  AddContactProps,
-  AddContactState
+  EditContactProps,
+  EditContactState
   > {
-  state: AddContactState = {
+  state: EditContactState = {
     name: '',
     phoneNumber: '',
     file: undefined,
@@ -65,15 +67,19 @@ export class EditContact extends React.PureComponent<
 
       if (this.state.file) {
         await this.uploadPicture()
-        alert('File was uploaded!')
       }
 
-      alert('Contact was updated!')
+      this.redirectToHome()
+
     } catch (e: any) {
       alert('Could not upload file: ' + e.message)
     } finally {
       this.setUploadState(UploadState.NoUpload)
     }
+  }
+
+  private redirectToHome() {
+    this.props.history.push('/')
   }
 
   private uploadPicture = async () => {

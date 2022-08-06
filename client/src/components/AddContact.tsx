@@ -4,6 +4,7 @@ import Auth from '../auth/Auth'
 import {getUploadUrl, uploadFile, createContact} from '../api/contacts-api'
 import {CreateContactRequest} from "../types/CreateContactRequest";
 import {ChangeEvent} from "react";
+import {History} from "history";
 
 enum UploadState {
   NoUpload,
@@ -13,6 +14,7 @@ enum UploadState {
 
 interface AddContactProps {
   auth: Auth
+  history: History
 }
 
 interface AddContactState {
@@ -61,15 +63,19 @@ export class AddContact extends React.PureComponent<
 
       if (this.state.file && this.state.contactId) {
         await this.uploadPicture(this.state.contactId)
-        alert('File was uploaded!')
       }
 
-      alert('Contact was created!')
+      this.redirectToHome()
+
     } catch (e: any) {
       alert('Could not upload file: ' + e.message)
     } finally {
       this.setUploadState(UploadState.NoUpload)
     }
+  }
+
+  private redirectToHome() {
+    this.props.history.push('/')
   }
 
   private uploadPicture = async (contactId: string) => {
