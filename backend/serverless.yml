@@ -77,6 +77,25 @@ functions:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}/index/${self:provider.environment.CONTACTS_CREATED_AT_INDEX}
 
+  GetContact:
+    handler: src/lambda/http/getContact.handler
+    events:
+      - http:
+          method: get
+          path: contacts/{contactId}
+          cors: true
+          authorizer: Auth
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}/index/${self:provider.environment.CONTACTS_CREATED_AT_INDEX}
+
+
   CreateContact:
     handler: src/lambda/http/createContact.handler
     events:

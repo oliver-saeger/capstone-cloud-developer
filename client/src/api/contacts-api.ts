@@ -70,7 +70,7 @@ export async function getContacts(idToken: string): Promise<Contact[]> {
 }
 
 export async function getContactById(idToken: string, contactId: string): Promise<Contact> {
-  console.log('Fetching contact with id:' + contactId)
+  console.log('Fetching contact with id: ' + contactId)
 
   const response = await Axios.get(`${apiEndpoint}/contacts/${contactId}`, {
     headers: {
@@ -78,7 +78,7 @@ export async function getContactById(idToken: string, contactId: string): Promis
       'Authorization': `Bearer ${idToken}`
     },
   })
-  console.log('Contact:', response.data)
+  console.log('Contact: ', response.data)
   return response.data.items
 }
 

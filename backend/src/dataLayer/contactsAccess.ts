@@ -34,6 +34,24 @@ export async function getContactItemsPerUser(userId: string): Promise<ContactIte
   return contactItems
 }
 
+export async function getContactItemByUserIdAndByContactId(userId: string, contactId: string): Promise<ContactItem> {
+  logger.info("Getting contact with id " + contactId + " for user with id " + userId)
+
+  const params: QueryInput = {
+    TableName: contactsTable,
+    KeyConditionExpression: 'userId = :userId and contactId = :contactId',
+    ExpressionAttributeValues: {
+      ':userId': userId,
+      ':contactId': contactId
+    }
+  }
+
+  const result = await dbClient.query(params).promise()
+  const contactItem = result.Items[0] as ContactItem
+  logger.info("Returning contacts: " + contactItem)
+  return contactItem
+}
+
 export async function createContactItem(contactItem: ContactItem): Promise<ContactItem> {
   const params : PutItemInput = {
     TableName: contactsTable,

@@ -1,6 +1,7 @@
 import {
   createContactItem,
   deleteContactItem,
+  getContactItemByUserIdAndByContactId,
   getContactItemsPerUser,
   updateAttachmentUrl,
   updateContactItem
@@ -53,4 +54,9 @@ export async function addAttachmentToContact(userId: string, contactId: string, 
   const attachmentUrl = getAttachmentBucketUrl(attachmentId);
   logger.info('Get attachment URL: ' + attachmentUrl)
   await updateAttachmentUrl(userId, contactId, attachmentUrl)
+}
+
+export async function getContactForUserWithContactId(userId: string, contactId: string): Promise<ContactItem> {
+  logger.info('Get contact item with id: ' + contactId)
+  return getContactItemByUserIdAndByContactId(userId, contactId);
 }
