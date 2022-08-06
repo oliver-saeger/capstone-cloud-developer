@@ -168,8 +168,6 @@ resources:
             AttributeType: S
           - AttributeName: createdAt
             AttributeType: S
-          - AttributeName: phoneNumber
-            AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
