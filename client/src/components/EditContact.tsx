@@ -116,77 +116,6 @@ export class EditContact extends React.PureComponent<
   }
 
   render() {
-    if(this.props.match.params.contactId) {
-      return this.renderEditPage()
-    }
-
-    return this.renderCreatePage()
-  }
-
-  private renderCreatePage() {
-    return (
-      <div>
-        <h1>Add new contact</h1>
-        <Form unstackable onSubmit={this.handleSubmit}>
-          <Form.Group unstackable widths={2}>
-            <Form.Input
-              id='form-input-name'
-              label='Name'
-              placeholder="Contact's name"
-              onChange={this.setNameState}
-            />
-            <Form.Input
-              id='form-input-phone'
-              label='Phone'
-              placeholder="Contact's phone number"
-              onChange={this.setPhoneState}
-            />
-          </Form.Group>
-          <Form.Field>
-            <label>Picture</label>
-            <input
-              ref={this.fileInputReference}
-              type="file"
-              accept="image/*"
-              placeholder="Image to upload"
-              onChange={this.handleFileChange}
-              hidden
-            />
-            <Button
-              type="button"
-              content='Choose picture'
-              icon='file'
-              onClick={() => this.fileInputReference.current.click()}
-            />
-            {this.renderUploadedPicture()}
-          </Form.Field>
-
-          {this.renderButton()}
-        </Form>
-      </div>
-    )
-  }
-
-  private async setEditPageState(contactId: string) {
-    const {name, phoneNumber, attachmentUrl} = await this.loadContact((contactId))
-    this.setState({
-      name: name,
-      phoneNumber: phoneNumber
-    })
-
-    if(attachmentUrl) {
-      this.setState({
-        attachmentUrl: attachmentUrl
-      })
-    }
-  }
-
-  componentDidMount() {
-    this.setEditPageState(this.props.match.params.contactId)
-  }
-
-  private renderEditPage() {
-
     return (
       <div>
         <h1>Edit contact</h1>
@@ -230,6 +159,24 @@ export class EditContact extends React.PureComponent<
         </Form>
       </div>
     )
+  }
+
+  private async setEditPageState(contactId: string) {
+    const {name, phoneNumber, attachmentUrl} = await this.loadContact((contactId))
+    this.setState({
+      name: name,
+      phoneNumber: phoneNumber
+    })
+
+    if(attachmentUrl) {
+      this.setState({
+        attachmentUrl: attachmentUrl
+      })
+    }
+  }
+
+  componentDidMount() {
+    this.setEditPageState(this.props.match.params.contactId)
   }
 
   private renderUploadedPicture() {
