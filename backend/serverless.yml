@@ -22,9 +22,9 @@ provider:
   # Use these variables in the functions and resources section below. For example,
   # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
   environment:
-    TODOS_TABLE: Todos-${self:provider.stage}
-    TODOS_CREATED_AT_INDEX: CreatedAtIndex
-    ATTACHMENT_S3_BUCKET: serverless-c4-todo-images-173186987902-${self:provider.stage}
+    CONTACTS_TABLE: Contacts-${self:provider.stage}
+    CONTACTS_CREATED_AT_INDEX: CreatedAtIndex
+    ATTACHMENT_S3_BUCKET: serverless-c4-contact-images-173186987902-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
   logs:
@@ -43,13 +43,13 @@ custom:
     api:
       info:
         version: v1.0.0
-        title: Todos API
-        description: Serverless application for todos
+        title: Contacts API
+        description: Serverless application to manage phone contacts
     models:
-      - name: TodoItem
+      - name: Contact
         contentType: application/json
-        schema: ${file(models/create-todo-model.json)}
-      - name: UpdateTodoItem
+        schema: ${file(models/create-contact-model.json)}
+      - name: UpdateContact
         contentType: application/json
         schema: ${file(models/update-todo-model.json)}
 
@@ -59,40 +59,40 @@ functions:
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
-  GetTodos:
-    handler: src/lambda/http/getTodos.handler
+  GetContacts:
+    handler: src/lambda/http/getContacts.handler
     events:
       - http:
           method: get
-          path: todos
+          path: contacts
           cors: true
           authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_CREATED_AT_INDEX}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.CONTACTS_CREATED_AT_INDEX}
 
-  CreateTodo:
-    handler: src/lambda/http/createTodo.handler
+  CreateContact:
+    handler: src/lambda/http/createContact.handler
     events:
       - http:
           method: post
-          path: todos
+          path: contacts
           cors: true
           authorizer: Auth
           request:
             schemas:
-              application/json: ${file(models/create-todo-model.json)}
+              application/json: ${file(models/create-contact-model.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONTACTS_TABLE}
 
   UpdateTodo:
     handler: src/lambda/http/updateTodo.handler
@@ -158,20 +158,22 @@ resources:
         RestApiId:
           Ref: ApiGatewayRestApi
     
-    TodosTable:
+    ContactTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
-          - AttributeName: todoId
+          - AttributeName: contactId
             AttributeType: S
           - AttributeName: createdAt
+            AttributeType: S
+          - AttributeName: phoneNumber
             AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
-          - AttributeName: todoId
+          - AttributeName: contactId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.TODOS_TABLE}

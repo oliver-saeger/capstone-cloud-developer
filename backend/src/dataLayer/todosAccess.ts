@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk'
 import { createLogger } from '../utils/logger'
-import { TodoItem } from '../models/TodoItem'
+import { ContactItem } from '../models/ContactItem'
 import {TodoUpdate} from "../models/TodoUpdate";
 import {DocumentClient} from "aws-sdk/lib/dynamodb/document_client";
 import UpdateItemInput = DocumentClient.UpdateItemInput;
@@ -14,14 +14,14 @@ const XAWS = AWSXRay.captureAWS(AWS)
 const logger = createLogger('TodosAccess')
 
 const dbClient: DocumentClient = new XAWS.DynamoDB.DocumentClient();
-const todoTable = process.env.TODOS_TABLE
+const contactsTable = process.env.CONTACTS_TABLE
 
-export async function getTodoItemsPerUser(userId: string): Promise<TodoItem[]> {
-  logger.info("Getting all todos for user: " + userId)
+export async function getContactItemsPerUser(userId: string): Promise<ContactItem[]> {
+  logger.info("Getting all contacts for user: " + userId)
 
   const params: QueryInput = {
-    TableName: todoTable,
-    IndexName: process.env.TODOS_CREATED_AT_INDEX,
+    TableName: contactsTable,
+    IndexName: process.env.CONTACTS_CREATED_AT_INDEX,
     KeyConditionExpression: 'userId = :userId',
     ExpressionAttributeValues: {
       ':userId': userId
@@ -29,14 +29,14 @@ export async function getTodoItemsPerUser(userId: string): Promise<TodoItem[]> {
   }
 
   const result = await dbClient.query(params).promise()
-  const todoItems = result.Items as TodoItem[]
-  logger.info("Returning Todos: " + todoItems)
-  return todoItems
+  const contactItems = result.Items as ContactItem[]
+  logger.info("Returning contacts: " + contactItems)
+  return contactItems
 }
 
-export async function createTodoItem(todoItem: TodoItem): Promise<TodoItem> {
+export async function createContactItem(todoItem: ContactItem): Promise<ContactItem> {
   const params : PutItemInput = {
-    TableName: todoTable,
+    TableName: contactsTable,
     Item: todoItem
   }
 
@@ -44,9 +44,9 @@ export async function createTodoItem(todoItem: TodoItem): Promise<TodoItem> {
   return todoItem
 }
 
-export async function updateTodoItem(userId: string, todoId: string, todoUpdate: TodoUpdate): Promise<TodoItem> {
+export async function updateTodoItem(userId: string, todoId: string, todoUpdate: TodoUpdate): Promise<ContactItem> {
   const params: UpdateItemInput = {
-    TableName: todoTable,
+    TableName: contactsTable,
     Key: {
       userId: userId,
       todoId: todoId
@@ -64,12 +64,12 @@ export async function updateTodoItem(userId: string, todoId: string, todoUpdate:
   }
 
   const updatedItem = await dbClient.update(params).promise()
-  return updatedItem.Attributes as TodoItem
+  return updatedItem.Attributes as ContactItem
 }
 
 export async function deleteTodoItem(userId: string, todoId: string): Promise<void> {
   const params: DeleteItemInput = {
-    TableName: todoTable,
+    TableName: contactsTable,
     Key: {
       userId: userId,
       todoId: todoId
@@ -81,7 +81,7 @@ export async function deleteTodoItem(userId: string, todoId: string): Promise<vo
 
 export async function updateAttachmentUrl(userId: string, todoId: string, attachmentUrl: string): Promise<void> {
   await dbClient.update({
-    TableName: todoTable,
+    TableName: contactsTable,
     Key: {
       userId,
       todoId

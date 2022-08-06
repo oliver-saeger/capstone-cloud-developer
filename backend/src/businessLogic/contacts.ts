@@ -1,13 +1,13 @@
 import {
-  createTodoItem,
+  createContactItem,
   deleteTodoItem,
-  getTodoItemsPerUser,
+  getContactItemsPerUser,
   updateAttachmentUrl,
   updateTodoItem
 } from '../dataLayer/todosAccess'
 import { getAttachmentBucketUrl, createAttachmentPresignedUrl } from '../helpers/attachmentUtils';
-import { TodoItem } from '../models/TodoItem'
-import { CreateTodoRequest } from '../requests/CreateTodoRequest'
+import { ContactItem } from '../models/ContactItem'
+import { CreateContactRequest } from '../requests/CreateContactRequest'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import { createLogger } from '../utils/logger'
 import * as uuid from 'uuid'
@@ -15,26 +15,25 @@ import * as uuid from 'uuid'
 
 const logger = createLogger('todos')
 
-export async function getAllTodosForUser(userId: string): Promise<TodoItem[]> {
-  return getTodoItemsPerUser(userId)
+export async function getAllContactsForUser(userId: string): Promise<ContactItem[]> {
+  return getContactItemsPerUser(userId)
 }
 
-export async function createTodo(userId: string, createTodoRequest: CreateTodoRequest): Promise<TodoItem> {
-  const todoId = uuid.v4();
+export async function createContact(userId: string, createTodoRequest: CreateContactRequest): Promise<ContactItem> {
+  const contactId = uuid.v4();
 
-  const newTodoItem: TodoItem = {
-    todoId: todoId,
+  const newContactItem: ContactItem = {
+    contactId: contactId,
     userId: userId,
     createdAt: new Date().toISOString(),
-    done: false,
     ...createTodoRequest
   }
 
-  logger.info('Storing new Todo: ' + newTodoItem)
-  return createTodoItem(newTodoItem);
+  logger.info('Storing new contact item: ' + newContactItem)
+  return createContactItem(newContactItem);
 }
 
-export async function updateTodo(userId: string, todoId: string, updateTodoRequest: UpdateTodoRequest): Promise<TodoItem> {
+export async function updateTodo(userId: string, todoId: string, updateTodoRequest: UpdateTodoRequest): Promise<ContactItem> {
   logger.info('Update Todo Item: ', {userId: userId, todoId: todoId, updateTodoRequest: updateTodoRequest})
   return updateTodoItem(userId, todoId, updateTodoRequest);
 }

@@ -2,21 +2,21 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
 import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
-import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
+import { CreateContactRequest } from '../../requests/CreateContactRequest'
 import { getUserId } from '../utils';
-import { createTodo } from '../../businessLogic/todos'
+import { createContact } from '../../businessLogic/contacts'
 import { createLogger } from "../../utils/logger";
 
 const logger = createLogger('todos')
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    logger.info("Create TODO event: " + JSON.stringify(event))
-    const createTodoRequest: CreateTodoRequest = JSON.parse(event.body)
+    logger.info("Create Contact event: " + JSON.stringify(event))
+    const createContactRequest: CreateContactRequest = JSON.parse(event.body)
     const userId = getUserId(event);
 
-    const newTodoItem = await createTodo(userId, createTodoRequest)
-    logger.info("New TODO item: " + JSON.stringify(newTodoItem))
+    const newContactItem = await createContact(userId, createContactRequest)
+    logger.info("New contact item: " + JSON.stringify(newContactItem))
 
     return {
       statusCode: 201,
@@ -25,7 +25,7 @@ export const handler = middy(
         'Access-Control-Allow-Credentials': true
       },
       body: JSON.stringify({
-        item: newTodoItem
+        item: newContactItem
       })
     }
   })

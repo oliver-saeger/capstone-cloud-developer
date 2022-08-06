@@ -5,7 +5,7 @@ import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import * as uuid from 'uuid'
 
-import { createUploadUrl, addAttachmentToTodo } from '../../businessLogic/todos'
+import { createUploadUrl, addAttachmentToTodo } from '../../businessLogic/contacts'
 import { getUserId } from '../utils'
 
 export const handler = middy(
