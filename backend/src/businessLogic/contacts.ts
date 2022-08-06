@@ -4,7 +4,7 @@ import {
   getContactItemsPerUser,
   updateAttachmentUrl,
   updateTodoItem
-} from '../dataLayer/todosAccess'
+} from '../dataLayer/contactsAccess'
 import { getAttachmentBucketUrl, createAttachmentPresignedUrl } from '../helpers/attachmentUtils';
 import { ContactItem } from '../models/ContactItem'
 import { CreateContactRequest } from '../requests/CreateContactRequest'
