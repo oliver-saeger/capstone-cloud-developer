@@ -11,7 +11,6 @@ import { CreateContactRequest } from '../requests/CreateContactRequest'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import { createLogger } from '../utils/logger'
 import * as uuid from 'uuid'
-// import * as createError from 'http-errors'
 
 const logger = createLogger('todos')
 
